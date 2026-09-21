@@ -13,10 +13,14 @@ public class ArduinoBridge : MonoBehaviour
     [Tooltip("波特率，必须与 Arduino 代码中一致")]
     public int baudRate = 9600;
 
+    [Header("Debug Mode (No Arduino Needed)")]
+    [Tooltip("勾选此项即可在没有 Arduino 的情况下用键盘测试")]
+    public bool useDebugKeyboard = true;
+    
     [Header("Arduino Data (Read Only)")]
     public int buttonState;
     public int soundLevel;
-    public int lightLevel;
+    public int lightLevel = 1000; // 默认环境光明亮
     public int fsr1Level;
     public int fsr2Level;
 
@@ -30,32 +34,58 @@ public class ArduinoBridge : MonoBehaviour
 
     void Start()
     {
-        OpenConnection();
+        // 如果没有开启 Debug 模式，才尝试连接串口
+        if (!useDebugKeyboard)
+        {
+            OpenConnection();
+        }
+        else
+        {
+            Debug.Log("<color=yellow>【Debug模式开启】已跳过 Arduino 连接，现在可以使用键盘数字键 1~5 模拟传感器输入！</color>");
+        }
     }
 
     void Update()
     {
-        // 1. 在主线程中解析最新的数据
-        string dataToParse = "";
-        lock (dataLock)
+        if (useDebugKeyboard)
         {
-            if (!string.IsNullOrEmpty(latestDataString))
+            // --- 键盘模拟逻辑 ---
+            // 1键：体温计按钮 (A0)
+            buttonState = Input.GetKey(KeyCode.Alpha1) ? 1 : 0;
+            
+            // 2键：喇叭声音 (A1)
+            soundLevel = Input.GetKey(KeyCode.Alpha2) ? 1 : 0;
+            
+            // 3键：遮住光敏传感器 (A3)，模拟环境变暗
+            lightLevel = Input.GetKey(KeyCode.Alpha3) ? 100 : 1000;
+            
+            // 4键：按压红色喷雾 (A4) - 模拟按到底
+            fsr1Level = Input.GetKey(KeyCode.Alpha4) ? 1000 : 0;
+            
+            // 5键：按压蓝色喷雾 (A5) - 模拟按到底
+            fsr2Level = Input.GetKey(KeyCode.Alpha5) ? 1000 : 0;
+        }
+        else
+        {
+            // 1. 真实 Arduino 模式：在主线程中解析最新的数据
+            string dataToParse = "";
+            lock (dataLock)
             {
-                dataToParse = latestDataString;
-                latestDataString = ""; // 读取后清空
+                if (!string.IsNullOrEmpty(latestDataString))
+                {
+                    dataToParse = latestDataString;
+                    latestDataString = ""; // 读取后清空
+                }
+            }
+
+            if (!string.IsNullOrEmpty(dataToParse))
+            {
+                ParseData(dataToParse);
             }
         }
 
-        if (!string.IsNullOrEmpty(dataToParse))
-        {
-            ParseData(dataToParse);
-        }
-
-        // 2. 测试：按空格键触发震动
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            TriggerVibration();
-        }
+        // 测试：如果处于连板状态，按空格键可以强行测试一次马达指令发送
+        // （现在的震动主要是受 GameplayController 里的心跳控制了）
     }
 
     private void OpenConnection()
