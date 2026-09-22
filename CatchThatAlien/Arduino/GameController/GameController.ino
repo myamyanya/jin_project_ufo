@@ -47,8 +47,8 @@ void loop() {
 
   // 3. 读取所有传感器的数据
   int btn = digitalRead(pinButton); // 用 digitalRead 确保按钮返回 0 或 1，避免 analog 产生的浮动值
-  // 音量传感器如果接了 Dout，用 digitalRead 可以得到稳定的 0 或 1（有无声音）
-  int sound = digitalRead(pinSound); 
+  // 音量传感器改回 Aout，用 analogRead 读取波形
+  int sound = analogRead(pinSound); 
   int light = analogRead(pinLight);
   int fsr1 = analogRead(pinFSR1);
   int fsr2 = analogRead(pinFSR2);

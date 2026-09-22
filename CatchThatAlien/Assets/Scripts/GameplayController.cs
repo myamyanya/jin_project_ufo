@@ -26,8 +26,8 @@ public class GameplayController : MonoBehaviour
     public AudioSource megaphoneAudio;
     [Tooltip("喇叭UI保持升起的时间（即使声音没了也保持一下，防抖动）")]
     public float megaphoneKeepAliveTime = 2f;
-    [Tooltip("如果没声音时喇叭一直响，勾选此项反转逻辑 (Active Low)")]
-    public bool invertSoundLogic = false;
+    [Tooltip("声音模拟量阈值：安静时数值在512左右，偏离超过此值视为听到大声音")]
+    public int soundAnalogThreshold = 100;
     private float megaTimer = 0f;
 
     [Header("3. Light Control (Light A3)")]
@@ -44,6 +44,9 @@ public class GameplayController : MonoBehaviour
     public RectTransform spray2UI;
     [Tooltip("UI 升起的目标 Y 轴坐标")]
     public float sprayTargetY = 150f;
+    
+    [Tooltip("如果越用力按数值反而越小，请勾选此项反转逻辑")]
+    public bool invertFSRLogic = false;
     
     [Tooltip("压感死区阈值（低于此值不算按压）")]
     public int fsrMinThreshold = 50;
@@ -138,7 +141,8 @@ public class GameplayController : MonoBehaviour
     {
         if (megaphoneUI == null) return;
 
-        bool hasSound = invertSoundLogic ? arduinoBridge.soundLevel == 0 : arduinoBridge.soundLevel == 1;
+        // 安静时模拟量约为 512，偏离超过阈值（如大于 612 或小于 412）则视为有声音
+        bool hasSound = Mathf.Abs(arduinoBridge.soundLevel - 512) > soundAnalogThreshold;
 
         if (hasSound)
         {
@@ -192,6 +196,13 @@ public class GameplayController : MonoBehaviour
     {
         int fsr1 = arduinoBridge.fsr1Level;
         int fsr2 = arduinoBridge.fsr2Level;
+
+        // 如果压感模块是用上拉电阻接法，用力按反而数值减小，则翻转数值
+        if (invertFSRLogic)
+        {
+            fsr1 = 1023 - fsr1;
+            fsr2 = 1023 - fsr2;
+        }
 
         bool spray1Active = fsr1 > fsrMinThreshold;
         bool spray2Active = fsr2 > fsrMinThreshold;
