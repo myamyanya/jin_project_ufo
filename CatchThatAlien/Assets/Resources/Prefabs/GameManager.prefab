@@ -263,6 +263,7 @@ RectTransform:
   - {fileID: 2979461989791434446}
   - {fileID: 3628547541199232925}
   - {fileID: 8838060299639402696}
+  - {fileID: 4805786414896688692}
   - {fileID: 5609069975949349703}
   - {fileID: 9002892755669746832}
   m_Father: {fileID: 6694431127745560831}
@@ -863,6 +864,7 @@ MonoBehaviour:
   megaTargetY: 150
   megaphoneAudio: {fileID: 4260329752627776458}
   megaphoneKeepAliveTime: 1
+  soundAnalogThreshold: 100
   lightUI: {fileID: 2979461989791434446}
   lightTargetY: 150
   lightThreshold: 400
@@ -871,12 +873,14 @@ MonoBehaviour:
   spray1UI: {fileID: 3628547541199232925}
   spray2UI: {fileID: 8838060299639402696}
   sprayTargetY: 150
+  invertFSRLogic: 0
   fsrMinThreshold: 50
   fsrMaxThreshold: 900
   maxFogDensity: 0.08
   colorFSR1: {r: 0, g: 0, b: 1, a: 1}
   colorFSR2: {r: 1, g: 0, b: 0, a: 1}
-  heartbeatInterval: 0.25
+  stethoscopeUI: {fileID: 4805786414896688692}
+  stethoTargetY: 150
 --- !u!82 &4260329752627776458
 AudioSource:
   m_ObjectHideFlags: 0
@@ -1191,3 +1195,78 @@ MonoBehaviour:
   m_InputActionsPerSecond: 10
   m_RepeatDelay: 0.5
   m_ForceModuleActive: 0
+--- !u!1 &8258947103825906912
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4805786414896688692}
+  - component: {fileID: 2429672072227064570}
+  - component: {fileID: 4584042503023878807}
+  m_Layer: 5
+  m_Name: Heartbeat
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!224 &4805786414896688692
+RectTransform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8258947103825906912}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2919519293136132904}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0.5, y: 0}
+  m_AnchorMax: {x: 0.5, y: 0}
+  m_AnchoredPosition: {x: 360, y: 100}
+  m_SizeDelta: {x: 100, y: 100}
+  m_Pivot: {x: 0.5, y: 0.5}
+--- !u!222 &2429672072227064570
+CanvasRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8258947103825906912}
+  m_CullTransparentMesh: 1
+--- !u!114 &4584042503023878807
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8258947103825906912}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Material: {fileID: 0}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
+  m_OnCullStateChanged:
+    m_PersistentCalls:
+      m_Calls: []
+  m_Sprite: {fileID: 0}
+  m_Type: 0
+  m_PreserveAspect: 0
+  m_FillCenter: 1
+  m_FillMethod: 4
+  m_FillAmount: 1
+  m_FillClockwise: 1
+  m_FillOrigin: 0
+  m_UseSpriteMesh: 0
+  m_PixelsPerUnitMultiplier: 1

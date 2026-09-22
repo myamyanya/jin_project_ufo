@@ -62,9 +62,10 @@ public class GameplayController : MonoBehaviour
     public Color colorFSR2 = Color.red;
 
     [Header("5. Heartbeat Vibration (A2)")]
-    [Tooltip("心跳震动间隔时间（秒）")]
-    public float heartbeatInterval = 1f;
-    private Coroutine heartbeatCoroutine;
+    public RectTransform stethoscopeUI;
+    [Tooltip("UI 升起的目标 Y 轴坐标")]
+    public float stethoTargetY = 150f;
+    private bool wasVibrating = false;
 
     // ==========================================
     // 内部状态变量
@@ -74,6 +75,7 @@ public class GameplayController : MonoBehaviour
     private Vector2 lightStartPos;
     private Vector2 spray1StartPos;
     private Vector2 spray2StartPos;
+    private Vector2 stethoStartPos;
     
     private bool wasFogEnabledBeforeGame;
 
@@ -85,6 +87,7 @@ public class GameplayController : MonoBehaviour
         if (lightUI != null) lightStartPos = lightUI.anchoredPosition;
         if (spray1UI != null) spray1StartPos = spray1UI.anchoredPosition;
         if (spray2UI != null) spray2StartPos = spray2UI.anchoredPosition;
+        if (stethoscopeUI != null) stethoStartPos = stethoscopeUI.anchoredPosition;
         
         // 记录初始雾气状态
         wasFogEnabledBeforeGame = RenderSettings.fog;
@@ -96,14 +99,15 @@ public class GameplayController : MonoBehaviour
         if (gameManager != null && gameManager.currentState != GameManager.GameState.Playing)
         {
             // 游戏未开始或已结束，重置状态
-            StopHeartbeat();
+            if (wasVibrating)
+            {
+                if (arduinoBridge != null) arduinoBridge.SetVibration(false);
+                wasVibrating = false;
+            }
             HideAllUIs();
             ResetEnvironment();
             return;
         }
-
-        // 确保心跳在跳动
-        StartHeartbeatIfNeeded();
 
         if (arduinoBridge != null)
         {
@@ -111,6 +115,7 @@ public class GameplayController : MonoBehaviour
             HandleMegaphone();
             HandleLights();
             HandleFogSpray();
+            HandleStethoscope();
         }
     }
 
@@ -262,36 +267,29 @@ public class GameplayController : MonoBehaviour
     }
 
     // ==========================================
-    // 5. 心跳震动逻辑 (A2)
+    // 5. 听诊器逻辑 (Vibration A2)
     // ==========================================
-    private void StartHeartbeatIfNeeded()
+    private void HandleStethoscope()
     {
-        if (heartbeatCoroutine == null)
-        {
-            heartbeatCoroutine = StartCoroutine(HeartbeatRoutine());
-        }
-    }
+        bool isSpaceHeld = Input.GetKey(KeyCode.Space);
 
-    private void StopHeartbeat()
-    {
-        if (heartbeatCoroutine != null)
+        // UI 平滑升降
+        if (stethoscopeUI != null)
         {
-            StopCoroutine(heartbeatCoroutine);
-            heartbeatCoroutine = null;
+            Vector2 targetPos = isSpaceHeld ? new Vector2(stethoStartPos.x, stethoTargetY) : stethoStartPos;
+            stethoscopeUI.anchoredPosition = Vector2.Lerp(stethoscopeUI.anchoredPosition, targetPos, Time.deltaTime * 10f);
         }
-    }
 
-    private IEnumerator HeartbeatRoutine()
-    {
-        while (true)
+        // 震动控制
+        if (isSpaceHeld && !wasVibrating)
         {
-            // 给 Arduino 发送 'V' 指令
-            if (arduinoBridge != null)
-            {
-                arduinoBridge.TriggerVibration();
-            }
-            // 等待间隔 (例如1秒)，产生扑通、扑通的效果
-            yield return new WaitForSeconds(heartbeatInterval);
+            arduinoBridge.SetVibration(true);
+            wasVibrating = true;
+        }
+        else if (!isSpaceHeld && wasVibrating)
+        {
+            arduinoBridge.SetVibration(false);
+            wasVibrating = false;
         }
     }
 
@@ -305,6 +303,7 @@ public class GameplayController : MonoBehaviour
         if (lightUI != null) lightUI.anchoredPosition = Vector2.Lerp(lightUI.anchoredPosition, lightStartPos, Time.deltaTime * 10f);
         if (spray1UI != null) spray1UI.anchoredPosition = Vector2.Lerp(spray1UI.anchoredPosition, spray1StartPos, Time.deltaTime * 10f);
         if (spray2UI != null) spray2UI.anchoredPosition = Vector2.Lerp(spray2UI.anchoredPosition, spray2StartPos, Time.deltaTime * 10f);
+        if (stethoscopeUI != null) stethoscopeUI.anchoredPosition = Vector2.Lerp(stethoscopeUI.anchoredPosition, stethoStartPos, Time.deltaTime * 10f);
     }
 
     private void ResetEnvironment()

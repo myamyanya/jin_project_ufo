@@ -5,11 +5,7 @@ const int pinLight = A3;
 const int pinFSR1 = A4;
 const int pinFSR2 = A5;
 
-unsigned long vibrationEndTime = 0;
-bool isVibrating = false;
 
-// 设置单次震动的时长 (毫秒)
-const int VIBRATION_DURATION = 200; 
 
 void setup() {
   // 与 Unity 通信的波特率，需与 Unity 脚本中保持一致
@@ -29,20 +25,12 @@ void loop() {
   if (Serial.available() > 0) {
     char cmd = Serial.read();
     
-    // 如果收到 'V'，触发一次震动
-    if (cmd == 'V') {
-      isVibrating = true;
+    if (cmd == '1') {
       digitalWrite(pinVibration, HIGH);
-      
-      // 记录结束震动的时间
-      vibrationEndTime = millis() + VIBRATION_DURATION; 
     }
-  }
-
-  // 2. 检查震动是否该停止了 (非阻塞等待)
-  if (isVibrating && millis() > vibrationEndTime) {
-    isVibrating = false;
-    digitalWrite(pinVibration, LOW);
+    else if (cmd == '0') {
+      digitalWrite(pinVibration, LOW);
+    }
   }
 
   // 3. 读取所有传感器的数据

@@ -153,19 +153,13 @@ public class ArduinoBridge : MonoBehaviour
     }
 
     /// <summary>
-    /// 触发 Arduino 端的震动马达
+    /// 用于控制马达持续震动
     /// </summary>
-    public void TriggerVibration()
+    public void SetVibration(bool isOn)
     {
         if (serialPort != null && serialPort.IsOpen)
         {
-            // 向 Arduino 发送字符 'V'
-            serialPort.Write("V");
-            Debug.Log("向 Arduino 发送了震动指令！");
-        }
-        else
-        {
-            Debug.LogWarning("无法触发震动，Arduino 未连接！");
+            serialPort.Write(isOn ? "1" : "0");
         }
     }
 
