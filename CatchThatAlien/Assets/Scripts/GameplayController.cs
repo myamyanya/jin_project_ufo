@@ -34,6 +34,8 @@ public class GameplayController : MonoBehaviour
     public RectTransform lightUI;
     [Tooltip("UI 升起的目标 Y 轴坐标")]
     public float lightTargetY = 150f;
+    [Tooltip("如果环境越暗，光敏读取的数值反而越大，请勾选此项")]
+    public bool invertLightLogic = false;
     [Tooltip("光敏阈值：低于此值时关灯")]
     public int lightThreshold = 400;
     [Tooltip("把需要关掉的 Directional Light 和 Point Lights 拖进来")]
@@ -175,8 +177,14 @@ public class GameplayController : MonoBehaviour
     // ==========================================
     private void HandleLights()
     {
+        int lightLvl = arduinoBridge.lightLevel;
+        if (invertLightLogic)
+        {
+            lightLvl = 1023 - lightLvl;
+        }
+
         // 开关模式：只要光照低于阈值，就关灯；否则开灯
-        bool lightsOn = arduinoBridge.lightLevel > lightThreshold;
+        bool lightsOn = lightLvl > lightThreshold;
 
         // UI 平滑升降 (灯关了的时候 UI 升起)
         if (lightUI != null)
