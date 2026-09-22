@@ -26,6 +26,8 @@ public class GameplayController : MonoBehaviour
     public AudioSource megaphoneAudio;
     [Tooltip("喇叭UI保持升起的时间（即使声音没了也保持一下，防抖动）")]
     public float megaphoneKeepAliveTime = 2f;
+    [Tooltip("如果没声音时喇叭一直响，勾选此项反转逻辑 (Active Low)")]
+    public bool invertSoundLogic = false;
     private float megaTimer = 0f;
 
     [Header("3. Light Control (Light A3)")]
@@ -136,7 +138,7 @@ public class GameplayController : MonoBehaviour
     {
         if (megaphoneUI == null) return;
 
-        bool hasSound = arduinoBridge.soundLevel == 1;
+        bool hasSound = invertSoundLogic ? arduinoBridge.soundLevel == 0 : arduinoBridge.soundLevel == 1;
 
         if (hasSound)
         {
