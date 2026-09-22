@@ -34,14 +34,12 @@ public class ArduinoBridge : MonoBehaviour
 
     void Start()
     {
-        // 如果没有开启 Debug 模式，才尝试连接串口
-        if (!useDebugKeyboard)
+        // 无论是否是 Debug 模式，都尝试连接 Arduino，这样即使在 Debug 模式下也能发送马达震动指令！
+        OpenConnection();
+
+        if (useDebugKeyboard)
         {
-            OpenConnection();
-        }
-        else
-        {
-            Debug.Log("<color=yellow>【Debug模式开启】已跳过 Arduino 连接，现在可以使用键盘数字键 1~5 模拟传感器输入！</color>");
+            Debug.Log("<color=yellow>【Debug模式开启】传感器输入将由键盘覆盖，但如果插了板子，仍可触发马达震动！</color>");
         }
     }
 
@@ -53,8 +51,8 @@ public class ArduinoBridge : MonoBehaviour
             // 1键：体温计按钮 (A0)
             buttonState = Input.GetKey(KeyCode.Alpha1) ? 1 : 0;
             
-            // 2键：喇叭声音 (A1)
-            soundLevel = Input.GetKey(KeyCode.Alpha2) ? 1 : 0;
+            // 2键：喇叭声音 (A1) - 模拟模拟量，不按是512(安静)，按下是1000(大声)
+            soundLevel = Input.GetKey(KeyCode.Alpha2) ? 1000 : 512;
             
             // 3键：遮住光敏传感器 (A3)，模拟环境变暗
             lightLevel = Input.GetKey(KeyCode.Alpha3) ? 100 : 1000;
