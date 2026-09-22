@@ -782,9 +782,19 @@ PrefabInstance:
       objectReference: {fileID: 1615757088}
     - target: {fileID: 2028036075161107536, guid: 00bca3f86f421b2458afa33f1b1a73f7,
         type: 3}
+      propertyPath: environmentLights.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2028036075161107536, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
       propertyPath: environmentLights.Array.data[0]
       value: 
       objectReference: {fileID: 410087040}
+    - target: {fileID: 2028036075161107536, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: environmentLights.Array.data[1]
+      value: 
+      objectReference: {fileID: 2039385365}
     - target: {fileID: 5683479001046878074, guid: 00bca3f86f421b2458afa33f1b1a73f7,
         type: 3}
       propertyPath: m_Name
@@ -840,6 +850,11 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7946868385523718485, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: arduinoBridge
+      value: 
+      objectReference: {fileID: 1615757088}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
