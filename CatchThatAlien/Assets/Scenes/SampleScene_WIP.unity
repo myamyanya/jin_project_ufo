@@ -787,8 +787,13 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 2028036075161107536, guid: 00bca3f86f421b2458afa33f1b1a73f7,
         type: 3}
+      propertyPath: invertLightLogic
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2028036075161107536, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
       propertyPath: soundAnalogThreshold
-      value: 511
+      value: 500
       objectReference: {fileID: 0}
     - target: {fileID: 2028036075161107536, guid: 00bca3f86f421b2458afa33f1b1a73f7,
         type: 3}
