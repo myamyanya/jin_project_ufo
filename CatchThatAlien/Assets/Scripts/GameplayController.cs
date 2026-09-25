@@ -111,6 +111,12 @@ public class GameplayController : MonoBehaviour
             return;
         }
 
+        // 如果打开了答题弹窗，冻结所有的道具判定，让出 1~5 键给选项卡
+        if (gameManager != null && gameManager.isAnswerMenuOpen)
+        {
+            return;
+        }
+
         if (arduinoBridge != null)
         {
             HandleThermometer();

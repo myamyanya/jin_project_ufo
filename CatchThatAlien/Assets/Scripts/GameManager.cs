@@ -4,7 +4,8 @@ using TMPro; // 需要引入 TextMeshPro 命名空间
 
 public class GameManager : MonoBehaviour
 {
-    public enum GameState { StartMenu, Playing, GameOver }
+    public enum GameState { StartMenu, Playing, GameOver, Win }
+    public enum AnswerOption { Option1, Option2, Option3, Option4, Option5 }
     
     [Header("游戏设置 (Game Settings)")]
     [Tooltip("倒计时秒数")]
@@ -23,9 +24,18 @@ public class GameManager : MonoBehaviour
     [Header("Arduino 关联 (可选)")]
     [Tooltip("拖入挂载了 ArduinoBridge 的物体，可以使用 Arduino 按钮来开始/重试")]
     public ArduinoBridge arduinoBridge; 
+
+    [Header("胜利判定 (Win Condition)")]
+    [Tooltip("设置哪一个选项是正确答案")]
+    public AnswerOption correctAnswer = AnswerOption.Option1;
+    [Tooltip("按 Tab 键弹出的答题面板")]
+    public GameObject answerMenuPanel;
+    [Tooltip("胜利时显示的画布 (Canvas)")]
+    public GameObject winCanvas;
     
-    // 当前状态和时间
+    // 当前状态
     public GameState currentState { get; private set; } = GameState.StartMenu;
+    public bool isAnswerMenuOpen { get; private set; } = false;
     private float currentTime;
     
     // 记录幕布在屏幕中央的初始位置
@@ -57,6 +67,24 @@ public class GameManager : MonoBehaviour
                 break;
                 
             case GameState.Playing:
+                // Tab 打开/关闭 答题面板
+                if (Input.GetKeyDown(KeyCode.Tab))
+                {
+                    isAnswerMenuOpen = !isAnswerMenuOpen;
+                    if (answerMenuPanel != null) answerMenuPanel.SetActive(isAnswerMenuOpen);
+                }
+
+                // 如果答题面板打开了，拦截 1-5 键作为答题输入
+                if (isAnswerMenuOpen)
+                {
+                    if (Input.GetKeyDown(KeyCode.Alpha1) || Input.GetKeyDown(KeyCode.Keypad1)) SelectOption(AnswerOption.Option1);
+                    else if (Input.GetKeyDown(KeyCode.Alpha2) || Input.GetKeyDown(KeyCode.Keypad2)) SelectOption(AnswerOption.Option2);
+                    else if (Input.GetKeyDown(KeyCode.Alpha3) || Input.GetKeyDown(KeyCode.Keypad3)) SelectOption(AnswerOption.Option3);
+                    else if (Input.GetKeyDown(KeyCode.Alpha4) || Input.GetKeyDown(KeyCode.Keypad4)) SelectOption(AnswerOption.Option4);
+                    else if (Input.GetKeyDown(KeyCode.Alpha5) || Input.GetKeyDown(KeyCode.Keypad5)) SelectOption(AnswerOption.Option5);
+                    // 倒计时依然继续
+                }
+
                 // 游戏中，执行倒计时
                 currentTime -= Time.deltaTime;
                 UpdateTimerUI();
@@ -65,7 +93,7 @@ public class GameManager : MonoBehaviour
                 {
                     currentTime = 0;
                     UpdateTimerUI();
-                    StartCoroutine(GameOverRoutine()); // 时间到，失败！
+                    GameOver(); // 时间到，失败！
                 }
                 break;
                 
@@ -139,12 +167,53 @@ public class GameManager : MonoBehaviour
         ResetGame();
     }
     
+    public void SelectOptionByIndex(int index)
+    {
+        SelectOption((AnswerOption)index);
+    }
+
+    private void SelectOption(AnswerOption chosen)
+    {
+        if (currentState != GameState.Playing) return;
+
+        if (chosen == correctAnswer)
+        {
+            WinGame();
+        }
+        else
+        {
+            GameOver(); // 失败
+        }
+    }
+
+    public void GameOver()
+    {
+        if (currentState != GameState.Playing) return;
+        StartCoroutine(GameOverRoutine());
+    }
+
+    private void WinGame()
+    {
+        currentState = GameState.Win;
+        isAnswerMenuOpen = false;
+        
+        if (answerMenuPanel != null) answerMenuPanel.SetActive(false);
+        if (timerText != null) timerText.gameObject.SetActive(false);
+        if (winCanvas != null) winCanvas.SetActive(true);
+        // 胜利时画面直接冻结，不播放幕布动画
+    }
+
     private void ResetGame()
     {
         // 恢复满时间
         currentTime = countdownSeconds;
         currentState = GameState.StartMenu; // 提前设置状态，以便 UpdateTimerUI 正确隐藏
+        isAnswerMenuOpen = false;
+
         UpdateTimerUI();
+        
+        if (answerMenuPanel != null) answerMenuPanel.SetActive(false);
+        if (winCanvas != null) winCanvas.SetActive(false);
         
         // 开始幕布回到屏幕中央（防备首次运行）
         if (startCurtain != null) 

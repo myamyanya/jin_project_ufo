@@ -49,19 +49,19 @@ public class ArduinoBridge : MonoBehaviour
         {
             // --- 键盘模拟逻辑 ---
             // 1键：体温计按钮 (A0)
-            buttonState = Input.GetKey(KeyCode.Alpha1) ? 1 : 0;
+            buttonState = (Input.GetKey(KeyCode.Alpha1) || Input.GetKey(KeyCode.Keypad1)) ? 1 : 0;
             
             // 2键：喇叭声音 (A1) - 模拟模拟量，不按是512(安静)，按下是1000(大声)
-            soundLevel = Input.GetKey(KeyCode.Alpha2) ? 1000 : 512;
+            soundLevel = (Input.GetKey(KeyCode.Alpha2) || Input.GetKey(KeyCode.Keypad2)) ? 1000 : 512;
             
             // 3键：遮住光敏传感器 (A3)，模拟环境变暗
-            lightLevel = Input.GetKey(KeyCode.Alpha3) ? 100 : 1000;
+            lightLevel = (Input.GetKey(KeyCode.Alpha3) || Input.GetKey(KeyCode.Keypad3)) ? 100 : 1000;
             
             // 4键：按压红色喷雾 (A4) - 模拟按到底
-            fsr1Level = Input.GetKey(KeyCode.Alpha4) ? 1000 : 0;
+            fsr1Level = (Input.GetKey(KeyCode.Alpha4) || Input.GetKey(KeyCode.Keypad4)) ? 1000 : 0;
             
             // 5键：按压蓝色喷雾 (A5) - 模拟按到底
-            fsr2Level = Input.GetKey(KeyCode.Alpha5) ? 1000 : 0;
+            fsr2Level = (Input.GetKey(KeyCode.Alpha5) || Input.GetKey(KeyCode.Keypad5)) ? 1000 : 0;
         }
         else
         {
