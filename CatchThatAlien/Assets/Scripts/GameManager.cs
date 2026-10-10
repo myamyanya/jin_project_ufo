@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
     public GameObject answerMenuPanel;
     [Tooltip("胜利时显示的画布 (Canvas)")]
     public GameObject winCanvas;
+
+    [Header("提示/说明弹窗 (Popup Modal, 可选)")]
+    [Tooltip("关联 PopupImageController，若弹窗打开时拦截点击以防误触游戏开始或重试")]
+    public PopupImageController popupController;
     
     // 当前状态
     public GameState currentState { get; private set; } = GameState.StartMenu;
@@ -53,6 +57,12 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
+        // 如果说明/规则弹窗正处于打开状态，跳过游戏状态点击，优先供弹窗关闭逻辑响应
+        if (popupController != null && popupController.IsOpen)
+        {
+            return;
+        }
+
         // 获取是否按下了键盘空格，或者鼠标左键点击
         bool actionButtonPressed = Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0);
 

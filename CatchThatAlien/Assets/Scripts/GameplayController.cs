@@ -111,8 +111,8 @@ public class GameplayController : MonoBehaviour
             return;
         }
 
-        // 如果打开了答题弹窗，冻结所有的道具判定，让出 1~5 键给选项卡
-        if (gameManager != null && gameManager.isAnswerMenuOpen)
+        // 如果打开了答题弹窗或说明弹窗，冻结所有的道具判定，让出 1~5 键给选项卡/弹窗
+        if (gameManager != null && (gameManager.isAnswerMenuOpen || (gameManager.popupController != null && gameManager.popupController.IsOpen)))
         {
             return;
         }
