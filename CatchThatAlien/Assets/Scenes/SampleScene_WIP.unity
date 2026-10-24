@@ -1554,6 +1554,33 @@ PrefabInstance:
       propertyPath: environmentLights.Array.data[0]
       value: 
       objectReference: {fileID: 410087040}
+    - target: {fileID: 2979461989791434446, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 1757
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979461989791434446, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2979461989791434446, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 105.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 4494465301606733586, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: de4848d71358a834aa1e178e18ddf64b,
+        type: 3}
+    - target: {fileID: 5377670414472758049, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_Sprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7549ff2f668f0e84e91196d5b68bb4b7,
+        type: 3}
     - target: {fileID: 5683479001046878074, guid: 00bca3f86f421b2458afa33f1b1a73f7,
         type: 3}
       propertyPath: m_Name
@@ -1608,6 +1635,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 9006219254862184474, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 9038.222
+      objectReference: {fileID: 0}
+    - target: {fileID: 9006219254862184474, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 5084
+      objectReference: {fileID: 0}
+    - target: {fileID: 9006219254862184474, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9006219254862184474, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 9006219254862184474, guid: 00bca3f86f421b2458afa33f1b1a73f7,
+        type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.25
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

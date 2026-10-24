@@ -137,9 +137,12 @@ public class GameplayController : MonoBehaviour
         // 如果按住按钮 (buttonState == 1)
         bool isActive = arduinoBridge.buttonState == 1;
         
-        Vector2 targetPos = isActive ? new Vector2(thermoStartPos.x, thermoTargetY) : thermoStartPos;
+        Vector2 targetPos = 
+            isActive ? new Vector2(thermoStartPos.x, thermoTargetY) : thermoStartPos;
+        
         // 使用 Lerp 实现平滑升降
-        thermometerUI.anchoredPosition = Vector2.Lerp(thermometerUI.anchoredPosition, targetPos, Time.deltaTime * 10f);
+        thermometerUI.anchoredPosition = Vector2.Lerp
+            (thermometerUI.anchoredPosition, targetPos, Time.deltaTime * 10f);
 
         if (isActive && temperatureText != null)
         {
